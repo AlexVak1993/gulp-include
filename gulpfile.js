@@ -3,13 +3,16 @@
 var gulp = require('gulp'),
     watch = require('gulp-watch'),
     prefixer = require('gulp-autoprefixer'),
-    // terser  = require('gulp-terser'),
     sass = require('gulp-sass'),
     babel = require("gulp-babel"),
-    // sourcemaps = require('gulp-sourcemaps'),
+    sourcemaps = require('gulp-sourcemaps'),
     rigger = require('gulp-rigger'),
     fileinclude = require('gulp-file-include'),
     cssmin = require('gulp-clean-css'),
+    postcss = require('gulp-postcss'),
+    rename = require('gulp-rename'),
+    mqpacker = require('css-mqpacker'),
+
     imagemin = require('gulp-imagemin'),
     pngquant = require('imagemin-pngquant'),
     rimraf = require('rimraf'),
@@ -51,7 +54,7 @@ var gulp = require('gulp'),
       },
       tunnel: false,
       host: 'localhost',
-      port: 9000,
+      port: 3000,
       logPrefix: "Frontend"
 };
 
@@ -78,8 +81,8 @@ gulp.task('js:build', async function () {
         })
       )
       // .pipe(sourcemaps.init())
-      // .pipe(terser())
       // .pipe(sourcemaps.write())
+      .pipe(rename({suffix: '.min'}))
       .pipe(gulp.dest(path.build.js))
       .pipe(reload({stream: true}));
 });
@@ -87,10 +90,12 @@ gulp.task('js:build', async function () {
 gulp.task('style:build', async function () {
     gulp.src(path.src.style)
         // .pipe(sourcemaps.init())
-        .pipe(sass().on('error', sass.logError))
+        .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
         .pipe(prefixer('last 2 versions'))
-        .pipe(cssmin())
+        .pipe(postcss([mqpacker()]))
+        // .pipe(cssmin())
         // .pipe(sourcemaps.write())
+        .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest(path.build.css))
         .pipe(reload({stream: true}));
 });

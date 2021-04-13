@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  position: relative;
+  height: 100%;
+  background-color: #6b6b6b;
+  font-size: $font-size;
+  font-family: $font-main;
+  font-weight: 400;
+}
+
+p {
+  font-size: 0.875rem;
+
+  @include desktop-md {
+    font-size: 1rem;
+  }
+}
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swiper-slide .full-img {
+  height: 80%;
+}
+
+.ax-container {
+  @include mobile-lg {
+    max-width: 600px;
+  }
+
+  @include desktop-md {
+    max-width: 800px;
+  }
+}
+
