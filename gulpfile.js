@@ -12,6 +12,8 @@ var gulp = require('gulp'),
     postcss = require('gulp-postcss'),
     rename = require('gulp-rename'),
     mqpacker = require('css-mqpacker'),
+    sortCSSmq = require('sort-css-media-queries'),
+    stripCSS = require('strip-css-comments'),
 
     imagemin = require('gulp-imagemin'),
     pngquant = require('imagemin-pngquant'),
@@ -92,7 +94,9 @@ gulp.task('style:build', async function () {
         // .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
         .pipe(prefixer('last 2 versions'))
-        .pipe(postcss([mqpacker()]))
+        .pipe(postcss([mqpacker({
+          sort: sortCSSmq
+        })]))
         // .pipe(cssmin())
         // .pipe(sourcemaps.write())
         .pipe(rename({suffix: '.min'}))

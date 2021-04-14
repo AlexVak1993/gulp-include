@@ -31,5 +31,8 @@
     "insales-uploader-autoprefixer": "^1.0.1",
     "node-sass": "^4.14.1",
     "rimraf": "^2.6.3"
+  },
+  "dependencies": {
+    "sort-css-media-queries": "^1.5.4"
   }
 }
