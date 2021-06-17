@@ -13,7 +13,6 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     mqpacker = require('css-mqpacker'),
     sortCSSmq = require('sort-css-media-queries'),
-    stripCSS = require('strip-css-comments'),
 
     imagemin = require('gulp-imagemin'),
     pngquant = require('imagemin-pngquant'),
@@ -77,28 +76,28 @@ gulp.task('js:build', async function () {
   gulp.src(path.src.js)
       // .pipe(rigger())
       .pipe(fileinclude())
-      .pipe(
-        babel({
-          presets: ["@babel/env"],
-        })
-      )
+      // .pipe(
+      //   babel({
+      //     presets: ["@babel/env"],
+      //   })
+      // )
       // .pipe(sourcemaps.init())
       // .pipe(sourcemaps.write())
-      .pipe(rename({suffix: '.min'}))
+      // .pipe(rename({suffix: '.min'}))
       .pipe(gulp.dest(path.build.js))
       .pipe(reload({stream: true}));
 });
 
 gulp.task('style:build', async function () {
     gulp.src(path.src.style)
-        // .pipe(sourcemaps.init())
+        .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
         .pipe(prefixer('last 2 versions'))
         .pipe(postcss([mqpacker({
           sort: sortCSSmq
         })]))
         // .pipe(cssmin())
-        // .pipe(sourcemaps.write())
+        .pipe(sourcemaps.write())
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest(path.build.css))
         .pipe(reload({stream: true}));
