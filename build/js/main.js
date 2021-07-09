@@ -1,22 +1,48 @@
-const svg1 = document.querySelector('.svg-1')
-const red = document.querySelector('.red')
-
-
-// svg1.addEventListener('mouseenter', () => {
-//   console.log(red);
-//   red.classList.add('animateOn')
-// })
-
-gsap.registerPlugin(ScrollTrigger, TextPlugin);
-gsap.from('.svg-1', {
-  rotation: 27,
-  x: 100,
-  duration: 1
-})
-
-gsap.defaults({ease: "none"});
-
-const tl = gsap.timeline({repeat:3, repeatDelay:1, yoyo:true});
-tl.to("h1 span", {duration: 4, text:" is so much fun you should try it some time!"})
-  // .to(".green", {x:100})
-  // .set(".green",  {text:"I am done"})
+var isFetching = true;
+var isLoading = false;
+var int = 42;
+var message = 'hello ts';
+var numberArray = [1, 1, 2, 3, 5, 8, 13];
+var numberArray2 = [1, 1, 2, 3, 5, 8, 13];
+var words = ['hello', 'world'];
+var contact = ['alex', 112312124];
+var variable = 42;
+variable = 'hi';
+console.log(variable);
+// function
+function sayMyName(name) {
+    console.log(name);
+}
+console.log('alex');
+function throwErr(msg) {
+    throw new Error(msg);
+}
+var login = 'admin';
+var id1 = 12;
+var rect1 = {
+    id: '1234',
+    size: {
+        width: 20,
+        height: 30
+    },
+    color: 'ccc'
+};
+// function
+function add(a, b) {
+    return a + b;
+}
+function toUpperCase(str) {
+    return str.trim().toUpperCase();
+}
+function position(a, b) {
+    if (!a && !b) {
+        return { x: undefined, y: undefined };
+    }
+    if (a && !b) {
+        return { x: a, y: undefined, "default": a.toString() };
+    }
+    return { x: a, y: b };
+}
+console.log('empty ', position());
+console.log('one param ', position(42));
+console.log('two param ', position(10, 12));

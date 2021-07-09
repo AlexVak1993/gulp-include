@@ -2,23 +2,29 @@
 
 var gulp = require('gulp'),
     watch = require('gulp-watch'),
-    prefixer = require('gulp-autoprefixer'),
-    sass = require('gulp-sass'),
-    babel = require("gulp-babel"),
     sourcemaps = require('gulp-sourcemaps'),
-    rigger = require('gulp-rigger'),
+    rimraf = require('rimraf'),
+    browserSync = require('browser-sync'),
+    reload = browserSync.reload,
+
     fileinclude = require('gulp-file-include'),
-    cssmin = require('gulp-clean-css'),
+
+    sass = require('gulp-sass'),
+    prefixer = require('gulp-autoprefixer'),
     postcss = require('gulp-postcss'),
-    rename = require('gulp-rename'),
     mqpacker = require('css-mqpacker'),
     sortCSSmq = require('sort-css-media-queries'),
+    cssmin = require('gulp-clean-css'),
+
+    babel = require('gulp-babel'),
+    ts = require('gulp-typescript'),
+    rigger = require('gulp-rigger'),
+
+    rename = require('gulp-rename'),
 
     imagemin = require('gulp-imagemin'),
-    pngquant = require('imagemin-pngquant'),
-    rimraf = require('rimraf'),
-    browserSync = require("browser-sync"),
-    reload = browserSync.reload;
+    webp = require('gulp-webp'),
+    pngquant = require('imagemin-pngquant');
 
     var path = {
         build: {
@@ -31,8 +37,7 @@ var gulp = require('gulp'),
         },
         src: { 
           html: 'src/*.html',
-          js: ['src/js/*.js'
-          ],
+          ts: ['src/ts/*.ts'],
           style: 'src/scss/main.scss',
           img: 'src/images/**/*.*', 
           fonts: 'src/fonts/**/*.*',
@@ -40,7 +45,7 @@ var gulp = require('gulp'),
         },
         watch: { 
           html: 'src/**/*.html',
-          js: 'src/js/**/*.js',
+          ts: 'src/ts/**/*.ts',
           style: 'src/scss/**/*.scss',
           img: 'src/images/**/*.*',
           fonts: 'src/fonts/**/*.*',
@@ -73,9 +78,13 @@ gulp.task('video:build', async function () {
 });
 
 gulp.task('js:build', async function () {
-  gulp.src(path.src.js)
+  gulp.src(path.src.ts)
       // .pipe(rigger())
-      .pipe(fileinclude())
+      // .pipe(fileinclude())
+      .pipe(ts({
+        // noImplicitAny: true,
+        outFile: 'main.js'
+      }))
       // .pipe(
       //   babel({
       //     presets: ["@babel/env"],
@@ -85,7 +94,7 @@ gulp.task('js:build', async function () {
       // .pipe(sourcemaps.write())
       // .pipe(rename({suffix: '.min'}))
       .pipe(gulp.dest(path.build.js))
-      .pipe(reload({stream: true}));
+      .pipe(reload({stream: true}))
 });
 
 gulp.task('style:build', async function () {
@@ -98,7 +107,7 @@ gulp.task('style:build', async function () {
         })]))
         // .pipe(cssmin())
         .pipe(sourcemaps.write())
-        .pipe(rename({suffix: '.min'}))
+        // .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest(path.build.css))
         .pipe(reload({stream: true}));
 });
@@ -113,6 +122,7 @@ gulp.task('fonts:build', async function() {
 
 var cache = require('gulp-cache');
 var imagemin = require('gulp-imagemin');
+var imageminWebp = require('imagemin-webp');
 var imageminPngquant = require('imagemin-pngquant');
 var imageminZopfli = require('imagemin-zopfli');
 var imageminMozjpeg = require('imagemin-mozjpeg'); //need to run 'brew install libpng'
@@ -120,8 +130,10 @@ var imageminGiflossy = require('imagemin-giflossy');
 
 gulp.task('image:build', async function() {
   return gulp.src(path.src.img)
+      // .pipe(webp())
       .pipe(cache(imagemin([
           //png
+          imageminWebp({quality: 10}),
           imageminPngquant({
               speed: 1,
               quality: [0.95, 1] //lossy settings
@@ -153,7 +165,7 @@ gulp.task('image:build', async function() {
           }),
           //jpg very light lossy, use vs jpegtran
           imageminMozjpeg({
-              quality: 90
+              quality: 10
           })
       ])))
       .pipe(gulp.dest(path.build.img)); //И бросим в build
@@ -177,7 +189,7 @@ gulp.task('watch', function(){
 gulp.task('watch', function(done){
   gulp.watch([path.watch.html], gulp.series('html:build')),
   gulp.watch([path.watch.style], gulp.series('style:build')),
-  gulp.watch([path.watch.js], gulp.series('js:build')),
+  gulp.watch([path.watch.ts], gulp.series('js:build')),
   gulp.watch([path.watch.img], gulp.series('image:build')),
   gulp.watch([path.watch.fonts], gulp.series('fonts:build')),
   gulp.watch([path.watch.video], gulp.series('video:build'))
