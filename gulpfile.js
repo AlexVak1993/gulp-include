@@ -74,6 +74,7 @@ gulp.task('video:build', async function () {
 
 gulp.task('js:build', async function () {
   gulp.src(path.src.js)
+  // .pipe(sourcemaps.init())
       // .pipe(rigger())
       .pipe(fileinclude())
       // .pipe(
@@ -81,7 +82,6 @@ gulp.task('js:build', async function () {
       //     presets: ["@babel/env"],
       //   })
       // )
-      // .pipe(sourcemaps.init())
       // .pipe(sourcemaps.write())
       // .pipe(rename({suffix: '.min'}))
       .pipe(gulp.dest(path.build.js))
@@ -98,7 +98,7 @@ gulp.task('style:build', async function () {
         })]))
         // .pipe(cssmin())
         .pipe(sourcemaps.write())
-        .pipe(rename({suffix: '.min'}))
+        // .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest(path.build.css))
         .pipe(reload({stream: true}));
 });
